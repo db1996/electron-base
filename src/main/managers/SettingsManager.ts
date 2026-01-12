@@ -1,18 +1,19 @@
-import { AllSettings, AllSettingsYupSchema } from '../types/settings/AllSettings'
-import { SettingsModel } from '../models/Settings'
-import { initializeDatabase } from '../database'
-import { runMigrations } from '../migrations/runner'
+import { AllSettings } from '../types/settings/AllSettings'
+import { databaseService, SettingsRepository } from '../database'
 
 /**
- * Centralized settings manager that handles all database operations
- * and provides a clean interface for the rest of the application
+ * Simplified settings manager using repository pattern
+ * Provides a clean interface for the rest of the application
  */
 export class SettingsManager {
     private static _instance: SettingsManager
+    private _settingsRepo: SettingsRepository
     private _currentSettings: AllSettings | null = null
     private _initialized = false
 
-    private constructor() {}
+    private constructor() {
+        this._settingsRepo = SettingsRepository.getInstance()
+    }
 
     public static getInstance(): SettingsManager {
         if (!SettingsManager._instance) {
@@ -28,15 +29,15 @@ export class SettingsManager {
         if (this._initialized) return
 
         try {
-            await initializeDatabase()
-            await runMigrations()
+            // Initialize database service (handles migrations, model registration, etc.)
+            await databaseService.initialize()
+
+            // Load current settings
             await this.loadSettings()
             this._initialized = true
         } catch (error) {
             console.error('Failed to initialize settings manager:', error)
-            // Fallback to defaults
-            this._currentSettings = AllSettingsYupSchema.cast({})
-            this._initialized = true
+            throw error
         }
     }
 
@@ -51,49 +52,24 @@ export class SettingsManager {
     }
 
     /**
-     * Load settings from database
+     * Load settings from database via repository
      */
     private async loadSettings(): Promise<void> {
         try {
-            let settingsRecord = await SettingsModel.findOne()
-
-            if (!settingsRecord) {
-                // Create defaults
-                const defaults = AllSettingsYupSchema.cast({})
-                settingsRecord = await SettingsModel.create(SettingsModel.fromAllSettings(defaults))
-            }
-
-            this._currentSettings = settingsRecord.toAllSettings()
+            this._currentSettings = await this._settingsRepo.getSettings()
         } catch (error) {
             console.error('Error loading settings:', error)
-            this._currentSettings = AllSettingsYupSchema.cast({})
+            throw error
         }
     }
 
     /**
-     * Save settings to database
+     * Save complete settings
      */
     public async saveSettings(settings: AllSettings): Promise<void> {
         try {
-            // Validate first
-            const validated = await AllSettingsYupSchema.validate(settings, {
-                stripUnknown: true,
-                abortEarly: false
-            })
-
-            // Update database
-            let settingsRecord = await SettingsModel.findOne()
-
-            if (settingsRecord) {
-                await settingsRecord.update(SettingsModel.fromAllSettings(validated))
-            } else {
-                settingsRecord = await SettingsModel.create(
-                    SettingsModel.fromAllSettings(validated)
-                )
-            }
-
-            // Update cache
-            this._currentSettings = validated
+            const updated = await this._settingsRepo.updateSettings(settings)
+            this._currentSettings = updated
         } catch (error) {
             console.error('Error saving settings:', error)
             throw error
@@ -104,16 +80,14 @@ export class SettingsManager {
      * Update partial settings
      */
     public async updateSettings(partialSettings: Partial<AllSettings>): Promise<AllSettings> {
-        const current = this.settings
-        const updated = { ...current, ...partialSettings }
-
-        // Handle nested theme object
-        if (partialSettings.theme) {
-            updated.theme = { ...current.theme, ...partialSettings.theme }
+        try {
+            const updated = await this._settingsRepo.updateSettings(partialSettings)
+            this._currentSettings = updated
+            return updated
+        } catch (error) {
+            console.error('Error updating settings:', error)
+            throw error
         }
-
-        await this.saveSettings(updated)
-        return updated
     }
 
     /**
@@ -128,8 +102,13 @@ export class SettingsManager {
      * Reset to defaults
      */
     public async resetToDefaults(): Promise<AllSettings> {
-        await SettingsModel.destroy({ where: {} })
-        await this.loadSettings()
-        return this.settings
+        try {
+            const defaults = await this._settingsRepo.resetSettings()
+            this._currentSettings = defaults
+            return defaults
+        } catch (error) {
+            console.error('Error resetting settings:', error)
+            throw error
+        }
     }
 }

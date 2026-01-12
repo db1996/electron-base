@@ -1,16 +1,15 @@
-import { ThemeSettings, ThemeYupSchema } from './ThemeSettings'
-import { SystemSettings, SystemSettingsYupSchema } from './SystemSettings'
-import { UpdaterSettings, UpdaterSettingsYupSchema } from './UpdaterSettings'
-import * as yup from 'yup'
+// Re-export types and schemas from the unified schema generator
+export type {
+    ThemeSettings,
+    SystemSettings,
+    UpdaterSettings,
+    AllSettings
+} from '../../database/schemas/settingsSchema'
 
-export type AllSettings = {
-    theme: ThemeSettings
-    system: SystemSettings
-    updater: UpdaterSettings
-}
-
-export const AllSettingsYupSchema = yup.object({
-    theme: ThemeYupSchema.default(() => ThemeYupSchema.cast({})),
-    system: SystemSettingsYupSchema.default(() => SystemSettingsYupSchema.cast({})),
-    updater: UpdaterSettingsYupSchema.default(() => UpdaterSettingsYupSchema.cast({}))
-}) as yup.Schema<AllSettings>
+export {
+    AllSettingsYupSchema,
+    ThemeYupSchema,
+    SystemSettingsYupSchema,
+    UpdaterSettingsYupSchema,
+    defaultSettings
+} from '../../database/schemas/settingsSchema'

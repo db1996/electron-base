@@ -4,7 +4,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../icons/icon.png?asset'
 import Settings from './classes/Settings'
 import AppState from './classes/AppState'
-import { closeDatabase } from './database'
+import { databaseService } from './database'
 
 let appState: AppState | null = null
 
@@ -45,11 +45,8 @@ function createWindow(): void {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
-    // Set app name for development and production
-    app.setName(app.getName())
-
     // Set app user model id for windows
-    electronApp.setAppUserModelId('com.github.db1996.example.electron-base')
+    electronApp.setAppUserModelId('com.github.db1996.gameintro-remover')
 
     // Default open or close DevTools by F12 in development
     // and ignore CommandOrControl + R in production.
@@ -103,7 +100,7 @@ app.on('window-all-closed', () => {
 app.on('before-quit', async () => {
     appState?.destroyTray()
     // Close database connection
-    await closeDatabase()
+    await databaseService.close()
 })
 
 // In this file you can include the rest of your app's specific main process

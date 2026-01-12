@@ -8,7 +8,6 @@ export default class Settings {
     static mainWindow: Electron.BrowserWindow | null = null
     private static settingsManager = SettingsManager.getInstance()
     private static autoLauncher: AutoLaunch | null = null
-    private static previousStartWithSystem: boolean | null = null
 
     static get allSettings(): AllSettings {
         return Settings.settingsManager.settings
@@ -116,8 +115,6 @@ export default class Settings {
                 await Settings.autoLauncher.disable()
                 console.log('Auto-launch disabled')
             }
-
-            Settings.previousStartWithSystem = shouldAutoLaunch
         } catch (error) {
             console.error('Error initializing auto-launch:', error)
         }
@@ -185,8 +182,6 @@ export default class Settings {
                 await Settings.autoLauncher.disable()
                 console.log('Auto-launch disabled')
             }
-
-            Settings.previousStartWithSystem = newValue
         } catch (error) {
             console.error('Error updating auto-launch setting:', error)
         }

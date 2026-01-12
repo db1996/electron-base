@@ -1,4 +1,4 @@
-import { contextBridge, webUtils } from 'electron'
+import { contextBridge } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 import { AllSettings } from '../main/types/settings/AllSettings'
 

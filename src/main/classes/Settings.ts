@@ -35,13 +35,13 @@ export default class Settings {
     }
 
     static async saveAllSettings(allSettings: AllSettings): Promise<void> {
-        const oldStartWithSystem = Settings.allSettings.theme.startWithSystem
-        const oldStartInTray = Settings.allSettings.theme.startInTray
+        const oldStartWithSystem = Settings.allSettings.system.startWithSystem
+        const oldStartInTray = Settings.allSettings.system.startInTray
 
         await Settings.settingsManager.saveSettings(allSettings)
 
-        const newStartWithSystem = allSettings.theme.startWithSystem
-        const newStartInTray = allSettings.theme.startInTray
+        const newStartWithSystem = allSettings.system.startWithSystem
+        const newStartInTray = allSettings.system.startInTray
 
         // Handle auto-launch changes
         await Settings.handleAutoLaunchChange(oldStartWithSystem, newStartWithSystem)
@@ -53,14 +53,14 @@ export default class Settings {
     }
 
     static async updateSettings(partialSettings: Partial<AllSettings>): Promise<AllSettings> {
-        const oldStartWithSystem = Settings.allSettings.theme.startWithSystem
-        const oldStartInTray = Settings.allSettings.theme.startInTray
+        const oldStartWithSystem = Settings.allSettings.system.startWithSystem
+        const oldStartInTray = Settings.allSettings.system.startInTray
 
         const result = await Settings.settingsManager.updateSettings(partialSettings)
 
         // Check if startWithSystem was changed
-        const newStartWithSystem = result.theme.startWithSystem
-        const newStartInTray = result.theme.startInTray
+        const newStartWithSystem = result.system.startWithSystem
+        const newStartInTray = result.system.startInTray
 
         // Handle auto-launch changes
         await Settings.handleAutoLaunchChange(oldStartWithSystem, newStartWithSystem)
@@ -101,12 +101,12 @@ export default class Settings {
                 Settings.autoLauncher = new AutoLaunch({
                     name: app.getName(),
                     path: process.execPath,
-                    isHidden: Settings.allSettings.theme.startInTray
+                    isHidden: Settings.allSettings.system.startInTray
                 })
             }
 
             // Set auto-launch based on current settings
-            const shouldAutoLaunch = Settings.allSettings.theme.startWithSystem
+            const shouldAutoLaunch = Settings.allSettings.system.startWithSystem
             const isEnabled = await Settings.autoLauncher.isEnabled()
 
             if (shouldAutoLaunch && !isEnabled) {
@@ -175,7 +175,7 @@ export default class Settings {
             Settings.autoLauncher = new AutoLaunch({
                 name: app.getName(),
                 path: process.execPath,
-                isHidden: Settings.allSettings.theme.startInTray
+                isHidden: Settings.allSettings.system.startInTray
             })
 
             if (newValue) {

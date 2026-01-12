@@ -1,16 +1,16 @@
 import { ThemeSettings, ThemeYupSchema } from './ThemeSettings'
+import { SystemSettings, SystemSettingsYupSchema } from './SystemSettings'
+import { UpdaterSettings, UpdaterSettingsYupSchema } from './UpdaterSettings'
 import * as yup from 'yup'
 
 export type AllSettings = {
     theme: ThemeSettings
-    updateCheckAutomatically: boolean
-    updateDownloadAutomatically: boolean
-    updateInstallAutomatically: boolean
+    system: SystemSettings
+    updater: UpdaterSettings
 }
 
 export const AllSettingsYupSchema = yup.object({
     theme: ThemeYupSchema.default(() => ThemeYupSchema.cast({})),
-    updateCheckAutomatically: yup.boolean().default(true),
-    updateDownloadAutomatically: yup.boolean().default(false),
-    updateInstallAutomatically: yup.boolean().default(false)
+    system: SystemSettingsYupSchema.default(() => SystemSettingsYupSchema.cast({})),
+    updater: UpdaterSettingsYupSchema.default(() => UpdaterSettingsYupSchema.cast({}))
 }) as yup.Schema<AllSettings>

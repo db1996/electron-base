@@ -7,13 +7,14 @@ interface SettingsAttributes {
     id: number
     // Theme settings
     themeType: 'light' | 'dark' | 'system'
+    datesLocale: 'nl-NL' | 'us-US'
     sidebarOpen: boolean
+    // System settings
     showTrayIcon: boolean
     minimizeToTray: boolean
     startInTray: boolean
     startWithSystem: boolean
-    datesLocale: 'nl-NL' | 'us-US'
-    // Update settings
+    // Updater settings
     updateCheckAutomatically: boolean
     updateDownloadAutomatically: boolean
     updateInstallAutomatically: boolean
@@ -33,12 +34,12 @@ class SettingsModel
 {
     declare id: number
     declare themeType: 'light' | 'dark' | 'system'
+    declare datesLocale: 'nl-NL' | 'us-US'
     declare sidebarOpen: boolean
     declare showTrayIcon: boolean
     declare minimizeToTray: boolean
     declare startInTray: boolean
     declare startWithSystem: boolean
-    declare datesLocale: 'nl-NL' | 'us-US'
     declare updateCheckAutomatically: boolean
     declare updateDownloadAutomatically: boolean
     declare updateInstallAutomatically: boolean
@@ -50,23 +51,27 @@ class SettingsModel
         return {
             theme: {
                 type: this.themeType || 'system',
-                sidebarOpen: this.sidebarOpen !== undefined ? this.sidebarOpen : true,
+                datesLocale: this.datesLocale || 'nl-NL',
+                sidebarOpen: this.sidebarOpen !== undefined ? this.sidebarOpen : true
+            },
+            system: {
                 showTrayIcon: this.showTrayIcon !== undefined ? this.showTrayIcon : false,
                 minimizeToTray: this.minimizeToTray !== undefined ? this.minimizeToTray : false,
                 startInTray: this.startInTray !== undefined ? this.startInTray : false,
-                startWithSystem: this.startWithSystem !== undefined ? this.startWithSystem : false,
-                datesLocale: this.datesLocale || 'nl-NL'
+                startWithSystem: this.startWithSystem !== undefined ? this.startWithSystem : false
             },
-            updateCheckAutomatically:
-                this.updateCheckAutomatically !== undefined ? this.updateCheckAutomatically : true,
-            updateDownloadAutomatically:
-                this.updateDownloadAutomatically !== undefined
-                    ? this.updateDownloadAutomatically
-                    : false,
-            updateInstallAutomatically:
-                this.updateInstallAutomatically !== undefined
-                    ? this.updateInstallAutomatically
-                    : false
+            updater: {
+                updateCheckAutomatically:
+                    this.updateCheckAutomatically !== undefined ? this.updateCheckAutomatically : true,
+                updateDownloadAutomatically:
+                    this.updateDownloadAutomatically !== undefined
+                        ? this.updateDownloadAutomatically
+                        : false,
+                updateInstallAutomatically:
+                    this.updateInstallAutomatically !== undefined
+                        ? this.updateInstallAutomatically
+                        : false
+            }
         }
     }
 
@@ -74,15 +79,15 @@ class SettingsModel
     public static fromAllSettings(allSettings: AllSettings): SettingsCreationAttributes {
         return {
             themeType: allSettings.theme.type,
-            sidebarOpen: allSettings.theme.sidebarOpen,
-            showTrayIcon: allSettings.theme.showTrayIcon,
-            minimizeToTray: allSettings.theme.minimizeToTray,
-            startInTray: allSettings.theme.startInTray,
-            startWithSystem: allSettings.theme.startWithSystem,
             datesLocale: allSettings.theme.datesLocale,
-            updateCheckAutomatically: allSettings.updateCheckAutomatically,
-            updateDownloadAutomatically: allSettings.updateDownloadAutomatically,
-            updateInstallAutomatically: allSettings.updateInstallAutomatically
+            sidebarOpen: allSettings.theme.sidebarOpen,
+            showTrayIcon: allSettings.system.showTrayIcon,
+            minimizeToTray: allSettings.system.minimizeToTray,
+            startInTray: allSettings.system.startInTray,
+            startWithSystem: allSettings.system.startWithSystem,
+            updateCheckAutomatically: allSettings.updater.updateCheckAutomatically,
+            updateDownloadAutomatically: allSettings.updater.updateDownloadAutomatically,
+            updateInstallAutomatically: allSettings.updater.updateInstallAutomatically
         }
     }
 }

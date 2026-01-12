@@ -21,7 +21,7 @@ export default class AppState {
     public async init() {
         this.registerIpcHandlers()
 
-        if (Settings.allSettings.theme.showTrayIcon && !this.tray) {
+        if (Settings.allSettings.system.showTrayIcon && !this.tray) {
             this.createTray()
         }
     }
@@ -29,17 +29,17 @@ export default class AppState {
     public registerWindowHandlers() {
         if (!Settings.mainWindow) return
         Settings.mainWindow.on('ready-to-show', () => {
-            if (!Settings.allSettings.theme.startInTray) Settings.mainWindow?.show()
+            if (!Settings.allSettings.system.startInTray) Settings.mainWindow?.show()
 
-            if (Settings.allSettings.theme.showTrayIcon && !this.tray) {
+            if (Settings.allSettings.system.showTrayIcon && !this.tray) {
                 this.createTray()
             }
         })
 
         Settings.mainWindow.on('close', (event) => {
             if (
-                Settings.allSettings.theme.showTrayIcon &&
-                Settings.allSettings.theme.minimizeToTray
+                Settings.allSettings.system.showTrayIcon &&
+                Settings.allSettings.system.minimizeToTray
             ) {
                 event.preventDefault()
                 Settings.mainWindow?.hide()
@@ -56,7 +56,7 @@ export default class AppState {
 
             await Settings.saveAllSettings(allSettings)
 
-            if (allSettings.theme.showTrayIcon) {
+            if (allSettings.system.showTrayIcon) {
                 if (!this.tray) {
                     console.log('Creating tray')
 

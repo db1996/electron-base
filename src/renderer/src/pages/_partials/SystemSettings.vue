@@ -31,7 +31,7 @@ const props = defineProps({
                             When enabled, the system tray icon will be shown.
                         </p>
                     </div>
-                    <SwitchInput id="show-tray-icon" v-model="form.theme.showTrayIcon" />
+                    <SwitchInput id="show-tray-icon" v-model="form.system.showTrayIcon" />
                 </div>
                 <div class="flex items-center justify-between">
                     <div class="space-y-2">
@@ -43,9 +43,9 @@ const props = defineProps({
                         </p>
                     </div>
                     <SwitchInput
-                        :disabled="!form.theme.showTrayIcon"
+                        :disabled="!form.system.showTrayIcon"
                         id="minimize-to-tray"
-                        v-model="form.theme.minimizeToTray"
+                        v-model="form.system.minimizeToTray"
                     />
                 </div>
                 <div class="flex items-center justify-between">
@@ -56,9 +56,9 @@ const props = defineProps({
                         </p>
                     </div>
                     <SwitchInput
-                        :disabled="!form.theme.showTrayIcon"
+                        :disabled="!form.system.showTrayIcon"
                         id="start-in-tray"
-                        v-model="form.theme.startInTray"
+                        v-model="form.system.startInTray"
                     />
                 </div>
 
@@ -70,7 +70,7 @@ const props = defineProps({
                             boots up.
                         </p>
                     </div>
-                    <SwitchInput id="start-with-system" v-model="form.theme.startWithSystem" />
+                    <SwitchInput id="start-with-system" v-model="form.system.startWithSystem" />
                 </div>
             </template>
         </CardForm>
@@ -164,17 +164,17 @@ const props = defineProps({
                     <div class="grid grid-cols-3 space-y-2 mt-4 gap-2">
                         <SwitchInput
                             id="auto-check-updates"
-                            v-model="form.updateCheckAutomatically"
+                            v-model="form.updater.updateCheckAutomatically"
                             label="Automatically check updates at startup"
                         />
                         <SwitchInput
                             id="auto-download-updates"
-                            v-model="form.updateDownloadAutomatically"
+                            v-model="form.updater.updateDownloadAutomatically"
                             label="Automatically download updates"
                         />
                         <SwitchInput
                             id="auto-install-updates"
-                            v-model="form.updateInstallAutomatically"
+                            v-model="form.updater.updateInstallAutomatically"
                             label="Automatically install updates"
                         />
                     </div>

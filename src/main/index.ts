@@ -80,15 +80,15 @@ app.whenReady().then(async () => {
 app.on('window-all-closed', () => {
     console.log(
         'window close called',
-        Settings.allSettings.theme.showTrayIcon,
+        Settings.allSettings.system.showTrayIcon,
         appState?.tray,
-        Settings.allSettings.theme.minimizeToTray
+        Settings.allSettings.system.minimizeToTray
     )
 
     // Don't quit if showTrayIcon is enabled (app should stay in tray)
     if (
-        Settings.allSettings.theme.showTrayIcon &&
-        Settings.allSettings.theme.minimizeToTray &&
+        Settings.allSettings.system.showTrayIcon &&
+        Settings.allSettings.system.minimizeToTray &&
         appState &&
         appState.tray
     ) {

@@ -94,19 +94,19 @@ export default class Updater {
         await Settings.load()
 
         try {
-            if (Settings.allSettings.updateCheckAutomatically) {
+            if (Settings.allSettings.updater.updateCheckAutomatically) {
                 // Check for updates after a short delay to allow the app to finish loading
                 let result = await autoUpdater.checkForUpdates()
 
                 if (
                     result &&
-                    Settings.allSettings.updateDownloadAutomatically &&
+                    Settings.allSettings.updater.updateDownloadAutomatically &&
                     result.isUpdateAvailable
                 ) {
                     console.log('Auto update download started')
                     await autoUpdater.downloadUpdate()
 
-                    if (Settings.allSettings.updateInstallAutomatically) {
+                    if (Settings.allSettings.updater.updateInstallAutomatically) {
                         setTimeout(() => {
                             console.log('Auto installing update')
                             autoUpdater.quitAndInstall()

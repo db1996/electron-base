@@ -1,0 +1,8 @@
+provider: github
+owner: db1996
+repo: electron-base
+updaterCacheDirName: electron-base-updater
+private: false
+requestHeaders:
+  Accept: application/vnd.github.v3+json
+  User-Agent: electron-base

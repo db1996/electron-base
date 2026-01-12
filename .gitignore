@@ -1,0 +1,7 @@
+node_modules
+dist
+out
+.DS_Store
+.eslintcache
+*.log*
+electron.vite.config.1763061126554.mjs

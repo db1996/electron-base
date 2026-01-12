@@ -1,7 +1,6 @@
 import { QueryInterface } from 'sequelize'
 import { sequelize } from '../database'
 import migration001 from './001_create_settings'
-import migration002 from './002_add_more_settings_1'
 
 interface Migration {
     up: (queryInterface: QueryInterface) => Promise<void>
@@ -9,8 +8,7 @@ interface Migration {
 }
 
 const migrations: { [key: string]: Migration } = {
-    '001_create_settings': migration001,
-    '002_add_more_settings_1': migration002
+    '001_create_settings': migration001
 }
 
 export async function runMigrations(): Promise<void> {

@@ -49,18 +49,18 @@ export default class Updater {
                             errorFound = true
                         }
                     }
-                    const match = err.stack.startsWith('Error: No published versions on GitHub')
-                    if (match) {
-                        actualerror = `No published versions found on update server.`
-                        errorFound = true
-                    }
+                }
+                let match = err.stack.startsWith('Error: No published versions on GitHub')
+                if (match) {
+                    actualerror = `No published versions found on update server.`
+                    errorFound = true
                 }
 
-                const match2 = err.stack.startsWith(
+                match = err.stack.startsWith(
                     'Error: Cannot parse releases feed: Error: Unable to find latest version on GitHub'
                 )
-                console.log('actualerror', actualerror, match2)
-                if (match2) {
+                console.log('actualerror', actualerror, match)
+                if (match) {
                     actualerror = `A new release tag was found but it does not contain any assets to download.`
                     errorFound = true
                 }

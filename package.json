@@ -1,7 +1,7 @@
 {
     "name": "electron-base-template",
     "productName": "Electron Base Template",
-    "version": "0.7.0",
+    "version": "1.0.0",
     "description": "Electron Base Template",
     "main": "./out/main/index.js",
     "author": "db1996",

@@ -28,6 +28,16 @@ export default {
                 allowNull: false,
                 defaultValue: false
             },
+            startInTray: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: false
+            },
+            startWithSystem: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: false
+            },
             datesLocale: {
                 type: DataTypes.ENUM('nl-NL', 'us-US'),
                 allowNull: false,

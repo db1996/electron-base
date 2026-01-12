@@ -1,7 +1,7 @@
 # Electron template
 ![alt text](icons/sidebar/logo-dark.svg)
 
-Electron Base Template
+A base electron app with shadcn, settings, themes, auto updating and workflows.
 
 ## quick start
 
@@ -15,6 +15,9 @@ Electron Base Template
 - Working github workflow for releases (Windows, Linux, Mac)
 - ShadCN UI with a bunch of custom premade form components
 - Some utility components test
+- Settings saving
+- Vue router
+- Typescript
 
 ## Build yourself
 

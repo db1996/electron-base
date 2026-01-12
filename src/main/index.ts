@@ -15,7 +15,7 @@ function createWindow(): void {
         height: 670,
         show: false,
         autoHideMenuBar: true,
-        title: 'Electron Base Template',
+        title: app.getName(),
         icon: icon, // Set icon for all platforms including Windows
         webPreferences: {
             preload: join(__dirname, '../preload/index.js'),
@@ -46,7 +46,7 @@ function createWindow(): void {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
     // Set app name for development and production
-    app.setName('Electron Base Template')
+    app.setName(app.getName())
 
     // Set app user model id for windows
     electronApp.setAppUserModelId('com.github.db1996.example.electron-base')

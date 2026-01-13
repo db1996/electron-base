@@ -16,7 +16,7 @@ withDefaults(defineProps<Props>(), {
 <template>
     <AppShell class="flex-col">
         <AppHeader :breadcrumbs="breadcrumbs">
-            <h1 class="text-2xl font-semibold">Setup GameIntroRemover</h1>
+            <h1 class="text-2xl font-semibold">Setup</h1>
         </AppHeader>
         <AppContent>
             <slot />

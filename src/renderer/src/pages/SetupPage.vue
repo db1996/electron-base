@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CardForm from '@renderer/components/form/CardForm.vue'
 import { useOptionsStore } from '@renderer/composables/useOptionsStore'
 import SetupLayout from '@renderer/layout/SetupLayout.vue'
 import router from '@renderer/router/router'
@@ -32,8 +33,10 @@ onMounted(() => {
             <h2 class="text-2xl font-semibold">Welcome to the Setup Page</h2>
             <h2 class="text-1xl font-semibold">{{ optionsStore.tutorialStatus.step }} / 4</h2>
         </div>
+
         <div class="flex justify-center items-center">
-            <div>asd</div>
+            <CardForm class="w-[80%]" title="Form card" description="You can change this later">
+            </CardForm>
         </div>
     </SetupLayout>
 </template>

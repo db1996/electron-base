@@ -1,6 +1,7 @@
 import { createRouter, RouteRecordRaw, createWebHashHistory } from 'vue-router'
 import HomePage from '@renderer/pages/HomePage.vue'
 import SettingsPage from '@renderer/pages/SettingsPage.vue'
+import SetupPage from '@renderer/pages/SetupPage.vue'
 
 const routes: RouteRecordRaw[] = [
     {
@@ -17,6 +18,11 @@ const routes: RouteRecordRaw[] = [
         path: '/settings',
         name: 'settings',
         component: SettingsPage
+    },
+    {
+        path: '/setup',
+        name: 'setup',
+        component: SetupPage
     }
 ]
 

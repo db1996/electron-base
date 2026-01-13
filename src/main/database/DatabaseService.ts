@@ -77,8 +77,9 @@ export class DatabaseService {
      */
     private async registerModels(): Promise<void> {
         // Initialize all models with the sequelize instance
-        const { initializeSettingsModel } = await import('./models')
+        const { initializeSettingsModel, initializeOptionsModel } = await import('./models')
         initializeSettingsModel(this._sequelize!)
+        initializeOptionsModel(this._sequelize!)
     }
 
     /**

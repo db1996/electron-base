@@ -48,6 +48,23 @@ const api = {
         electronAPI.ipcRenderer.on('update-download-progress', (_, progress) => callback(progress)),
     onUpdateDownloaded: (callback: (arg0: any) => void) =>
         electronAPI.ipcRenderer.on('update-downloaded', (_, info) => callback(info)),
+
+    // Options APIs
+    optionsGet: (key: string, defaultValue?: string) =>
+        electronAPI.ipcRenderer.invoke('options-get', key, defaultValue),
+    optionsSet: (key: string, value: string) =>
+        electronAPI.ipcRenderer.invoke('options-set', key, value),
+    optionsDelete: (key: string) => electronAPI.ipcRenderer.invoke('options-delete', key),
+    optionsHas: (key: string) => electronAPI.ipcRenderer.invoke('options-has', key),
+    optionsGetAll: () => electronAPI.ipcRenderer.invoke('options-get-all'),
+    optionsGetBool: (key: string, defaultValue?: boolean) =>
+        electronAPI.ipcRenderer.invoke('options-get-bool', key, defaultValue),
+    optionsSetBool: (key: string, value: boolean) =>
+        electronAPI.ipcRenderer.invoke('options-set-bool', key, value),
+    optionsGetNumber: (key: string, defaultValue?: number) =>
+        electronAPI.ipcRenderer.invoke('options-get-number', key, defaultValue),
+    optionsSetNumber: (key: string, value: number) =>
+        electronAPI.ipcRenderer.invoke('options-set-number', key, value),
     checkUpdateOnStartup: () => electronAPI.ipcRenderer.invoke('check-update-startup')
 }
 

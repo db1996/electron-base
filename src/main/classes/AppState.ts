@@ -8,6 +8,7 @@ import Updater from './Updater'
 import ncp from 'copy-paste'
 import { randomUUID } from 'crypto'
 import fs from 'fs'
+import { Options } from './Options'
 
 export default class AppState {
     public tray: Tray | null = null
@@ -29,7 +30,14 @@ export default class AppState {
     public registerWindowHandlers() {
         if (!Settings.mainWindow) return
         Settings.mainWindow.on('ready-to-show', () => {
-            if (!Settings.allSettings.system.startInTray) Settings.mainWindow?.show()
+            if (!Settings.allSettings.system.startInTray) {
+                Settings.mainWindow?.show()
+            }
+
+            if (Settings.setupCompleted === false) {
+                console.log('setup not completed')
+                Settings.mainWindow?.show()
+            }
 
             if (Settings.allSettings.system.showTrayIcon && !this.tray) {
                 this.createTray()
@@ -188,6 +196,43 @@ export default class AppState {
 
         ipcMain.handle('get-current-version', () => {
             return app.getVersion()
+        })
+
+        // Options IPC handlers
+        ipcMain.handle('options-get', async (_event, key: string, defaultValue?: string) => {
+            return await Options.get(key, defaultValue)
+        })
+
+        ipcMain.handle('options-set', async (_event, key: string, value: string) => {
+            return await Options.set(key, value)
+        })
+
+        ipcMain.handle('options-delete', async (_event, key: string) => {
+            return await Options.delete(key)
+        })
+
+        ipcMain.handle('options-has', async (_event, key: string) => {
+            return await Options.has(key)
+        })
+
+        ipcMain.handle('options-get-all', async () => {
+            return await Options.getAll()
+        })
+
+        ipcMain.handle('options-get-bool', async (_event, key: string, defaultValue?: boolean) => {
+            return await Options.getBool(key, defaultValue)
+        })
+
+        ipcMain.handle('options-set-bool', async (_event, key: string, value: boolean) => {
+            return await Options.setBool(key, value)
+        })
+
+        ipcMain.handle('options-get-number', async (_event, key: string, defaultValue?: number) => {
+            return await Options.getNumber(key, defaultValue)
+        })
+
+        ipcMain.handle('options-set-number', async (_event, key: string, value: number) => {
+            return await Options.setNumber(key, value)
         })
     }
 

@@ -43,6 +43,17 @@ declare global {
             onUpdateDownloadProgress: (callback: (progress: ProgressInfo) => void) => void
             onUpdateDownloaded: (callback: (info: UpdateInfo) => void) => void
             checkUpdateOnStartup: () => Promise<void>
+
+            // Options APIs
+            optionsGet: (key: string, defaultValue?: string) => Promise<string | null>
+            optionsSet: (key: string, value: string) => Promise<boolean>
+            optionsDelete: (key: string) => Promise<boolean>
+            optionsHas: (key: string) => Promise<boolean>
+            optionsGetAll: () => Promise<Record<string, string>>
+            optionsGetBool: (key: string, defaultValue?: boolean) => Promise<boolean>
+            optionsSetBool: (key: string, value: boolean) => Promise<boolean>
+            optionsGetNumber: (key: string, defaultValue?: number) => Promise<number>
+            optionsSetNumber: (key: string, value: number) => Promise<boolean>
         }
     }
 }

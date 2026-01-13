@@ -1,0 +1,5 @@
+export { AppState } from './AppState'
+export { Options } from './Options'
+export { Settings } from './Settings'
+export { Updater } from './Updater'
+export { Utils } from './Utils'

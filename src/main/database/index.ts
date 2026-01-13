@@ -1,4 +1,6 @@
 export { DatabaseService, databaseService } from './DatabaseService'
 export { SettingsRepository } from './repositories/SettingsRepository'
+export { OptionsRepository } from './repositories/OptionsRepository'
 export * from './models'
 export * from './schemas/settingsSchema'
+export * from './schemas/optionsSchema'

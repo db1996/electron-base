@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import ConfirmDialog from '@components/ConfirmDialog.vue'
-import AppSidebarLayout from '@layout/app/AppSidebarLayout.vue'
 import { useAppearance } from '@renderer/composables/useAppearance'
 import { useOptionsStore } from '@renderer/composables/useOptionsStore'
 import { useUpdateStore } from '@renderer/composables/useUpdateStore'
@@ -11,13 +10,18 @@ import { onMounted, useSlots } from 'vue'
 import { Toaster } from 'vue-sonner'
 import { Theme } from 'vue-sonner/src/packages/types.js'
 import 'vue-sonner/style.css' // vue-sonner v2 requires this import
+import AppHeaderLayout from './app/AppHeaderLayout.vue'
 
 interface Props {
     breadcrumbs?: BreadcrumbItem[]
+    loading?: boolean
+    loadingMessage?: string
 }
 
 withDefaults(defineProps<Props>(), {
-    breadcrumbs: () => []
+    breadcrumbs: () => [],
+    loading: false,
+    loadingMessage: ''
 })
 
 const appearanceStore = useAppearance()
@@ -39,8 +43,14 @@ onMounted(async () => {
 </script>
 
 <template>
-    <AppSidebarLayout :breadcrumbs="breadcrumbs">
-        <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
+    <AppHeaderLayout :breadcrumbs="breadcrumbs">
+        <div
+            class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4"
+            :class="{ loading: loading, 'overflow-hidden': loading }"
+        >
+            <div class="loading-div w-full h-full overflow-hidden" v-if="loading">
+                <div class="loading-message" v-if="loadingMessage">{{ loadingMessage }}</div>
+            </div>
             <div
                 v-if="slots.header || slots.actions"
                 class="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center"
@@ -53,7 +63,7 @@ onMounted(async () => {
             </div>
             <slot />
         </div>
-    </AppSidebarLayout>
+    </AppHeaderLayout>
 
     <Toaster :theme="(appearanceStore.appearance.value as Theme)" />
     <ConfirmDialog />

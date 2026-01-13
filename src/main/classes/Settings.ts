@@ -2,12 +2,16 @@ import { AllSettings } from '../types/settings/AllSettings'
 import { SettingsManager } from '../managers/SettingsManager'
 import AutoLaunch from 'auto-launch'
 import { app } from 'electron'
+import { Options } from './Options'
 
 export default class Settings {
     static loaded: boolean = false
     static mainWindow: Electron.BrowserWindow | null = null
     private static settingsManager = SettingsManager.getInstance()
     private static autoLauncher: AutoLaunch | null = null
+
+    static setupCompleted: boolean = false
+    static setupStep: number = 1
 
     static get allSettings(): AllSettings {
         return Settings.settingsManager.settings
@@ -23,6 +27,14 @@ export default class Settings {
             await Settings.initializeAutoLaunch()
             Settings.loaded = true
             console.log('Settings loaded', Settings.allSettings)
+
+            this.setupCompleted = await Options.getBool('setupCompleted', false)
+            this.setupStep = await Options.getNumber('setupStep', 1)
+
+            console.log('Tutorial status:', {
+                completed: this.setupCompleted,
+                step: this.setupStep
+            })
         } catch (error) {
             console.error('Error loading settings:', error)
             Settings.loaded = true // Set to true even on error to prevent infinite retry

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import CardForm from '@renderer/components/form/CardForm.vue'
+import { appConfig } from '@main/types/appConfig'
+import Button from '@renderer/components/ui/button/Button.vue'
 import { useOptionsStore } from '@renderer/composables/useOptionsStore'
 import SetupLayout from '@renderer/layout/SetupLayout.vue'
 import router from '@renderer/router/router'
@@ -11,32 +12,58 @@ const isLoading = ref(false)
 const loadingMessage = ref('Initializing setup...')
 
 watch(
-    () => optionsStore.tutorialStatus,
-    newStatus => {
-        if (newStatus.completed) {
+    () => optionsStore.setupStatus.completed,
+    completed => {
+        if (completed) {
             router.push('/')
         }
     },
     { immediate: true }
 )
 
-onMounted(() => {
-    if (optionsStore.tutorialStatus.completed) {
+onMounted(async () => {
+    if (optionsStore.setupStatus.completed) {
         router.push('/')
     }
 })
+
+async function nextStep () {
+    optionsStore.setupStatus.step += 1
+
+    console.log(
+        'Advancing to setup step:',
+        optionsStore.setupStatus.step,
+        '/',
+        appConfig.MAX_SETUP_STEPS
+    )
+
+    if (optionsStore.setupStatus.step > appConfig.MAX_SETUP_STEPS) {
+        optionsStore.setupStatus.completed = true
+    }
+
+    await optionsStore.updateSetupStatus()
+}
 </script>
 
 <template>
     <SetupLayout :loading="isLoading" :loadingMessage="loadingMessage">
         <div class="flex justify-center items-center gap-2">
-            <h2 class="text-2xl font-semibold">Welcome to the Setup Page</h2>
-            <h2 class="text-1xl font-semibold">{{ optionsStore.tutorialStatus.step }} / 4</h2>
+            <h2 class="text-2xlg font-semibold">Welcome to the Setup Page</h2>
+            <h2 class="text-1xl font-semibold">
+                {{ optionsStore.setupStatus.step }} / {{ appConfig.MAX_SETUP_STEPS }}
+            </h2>
+
+            <div class="grow text-right absolute right-8">
+                <Button @click="nextStep">{{
+                    optionsStore.setupStatus.step < appConfig.MAX_SETUP_STEPS
+                        ? 'Next Step'
+                        : 'Finish'
+                }}</Button>
+            </div>
         </div>
 
         <div class="flex justify-center items-center">
-            <CardForm class="w-[80%]" title="Form card" description="You can change this later">
-            </CardForm>
+            <!-- Use CardForm -->
         </div>
     </SetupLayout>
 </template>

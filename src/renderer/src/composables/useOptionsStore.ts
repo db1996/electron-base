@@ -2,7 +2,7 @@ import { acceptHMRUpdate, defineStore } from 'pinia'
 import { ref } from 'vue'
 import { debounce } from 'lodash'
 import { toast } from 'vue-sonner'
-import router from '@renderer/router/router'
+import { appConfig } from '@main/types/appConfig'
 
 export interface Option {
     key: string
@@ -14,7 +14,7 @@ export const useOptionsStore = defineStore('options', () => {
     const isLoading = ref(false)
     const isInitialized = ref(false)
 
-    const tutorialStatus = ref({
+    const setupStatus = ref({
         completed: false,
         step: 1
     })
@@ -28,12 +28,22 @@ export const useOptionsStore = defineStore('options', () => {
         console.log('Initializing options store')
         await loadAllOptions()
 
-        tutorialStatus.value.completed = (await getBool('setupCompleted', false)) || false
-        tutorialStatus.value.step = (await getNumber('setupStep', 1)) || 1
+        setupStatus.value.completed = (await getBool('setupCompleted', false)) || false
+        setupStatus.value.step = (await getNumber('setupStep', 1)) || 1
 
-        console.log('Tutorial status:', tutorialStatus.value)
+        if (setupStatus.value.step > appConfig.MAX_SETUP_STEPS && !setupStatus.value.completed) {
+            setupStatus.value.completed = true
+            await setBool('setupCompleted', true)
+        }
+
+        console.log('Tutorial status:', setupStatus.value)
 
         isInitialized.value = true
+    }
+
+    async function updateSetupStatus() {
+        await setBool('setupCompleted', setupStatus.value.completed)
+        await setNumber('setupStep', setupStatus.value.step)
     }
 
     /**
@@ -242,13 +252,15 @@ export const useOptionsStore = defineStore('options', () => {
     return {
         // State
         options: getReactiveOptions(),
-        tutorialStatus,
+        setupStatus,
         isLoading,
         isInitialized,
 
         // Core functions
         init,
         loadAllOptions,
+
+        updateSetupStatus,
 
         // String functions
         get,

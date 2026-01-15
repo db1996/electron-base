@@ -2,21 +2,22 @@
 import ConfirmDialog from '@components/ConfirmDialog.vue'
 import { useAppearance } from '@renderer/composables/useAppearance'
 import { useOptionsStore } from '@renderer/composables/useOptionsStore'
-import { useUpdateStore } from '@renderer/composables/useUpdateStore'
 import ReleasenotesDialog from '@renderer/pages/dialogs/ReleasenotesDialog.vue'
 import router from '@renderer/router/router'
 import { BreadcrumbItem } from '@renderer/types/navigation'
-import { onMounted, useSlots } from 'vue'
-import { Toaster } from 'vue-sonner'
+import { onMounted, useSlots, watch } from 'vue'
 import { Theme } from 'vue-sonner/src/packages/types.js'
 import 'vue-sonner/style.css' // vue-sonner v2 requires this import
 import AppHeaderLayout from './app/AppHeaderLayout.vue'
+import Sonner from '@components/ui/sonner/Sonner.vue'
 
 interface Props {
     breadcrumbs?: BreadcrumbItem[]
     loading?: boolean
     loadingMessage?: string
 }
+
+const optionsStore = useOptionsStore()
 
 withDefaults(defineProps<Props>(), {
     breadcrumbs: () => [],
@@ -27,18 +28,18 @@ withDefaults(defineProps<Props>(), {
 const appearanceStore = useAppearance()
 const slots = useSlots()
 
+watch(
+    () => optionsStore.setupStatus.completed,
+    completed => {
+        if (completed) {
+            router.push('/')
+        }
+    },
+    { immediate: true, deep: true }
+)
+
 onMounted(async () => {
-    const updateStore = useUpdateStore()
-    updateStore.checkUpdateOnStartup()
-
-    const optionsStore = useOptionsStore()
     await optionsStore.init()
-
-    if (!optionsStore.tutorialStatus.completed) {
-        console.log('Tutorial not completed, setting up defaults')
-        router.push('/setup')
-        // You can add additional logic here if needed
-    }
 })
 </script>
 
@@ -65,7 +66,7 @@ onMounted(async () => {
         </div>
     </AppHeaderLayout>
 
-    <Toaster :theme="(appearanceStore.appearance.value as Theme)" />
+    <Sonner :theme="(appearanceStore.appearance.value as Theme)" position="bottom-right" />
     <ConfirmDialog />
     <ReleasenotesDialog />
 </template>

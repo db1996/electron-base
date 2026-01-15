@@ -30,7 +30,7 @@ onMounted(async () => {
     const optionsStore = useOptionsStore()
     await optionsStore.init()
 
-    if (!optionsStore.tutorialStatus.completed) {
+    if (!optionsStore.setupStatus.completed) {
         console.log('Tutorial not completed, setting up defaults')
         router.push('/setup')
         // You can add additional logic here if needed
